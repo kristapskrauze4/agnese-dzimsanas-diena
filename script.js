@@ -20,7 +20,18 @@ function goToStep(n) {
     dot.classList.toggle("current", i + 1 === n);
     dot.classList.toggle("done", i + 1 < n);
   });
+  resetScroll();
+}
+
+function resetScroll() {
   window.scrollTo(0, 0);
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+  requestAnimationFrame(() => {
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  });
 }
 
 document.querySelectorAll("[data-next]").forEach((btn) => {
