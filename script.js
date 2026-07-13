@@ -260,31 +260,103 @@ couponGrid.addEventListener("click", (e) => {
 });
 
 function downloadCoupon(coupon, btn) {
-  const render = document.createElement("div");
-  render.className = "coupon-render";
-  render.innerHTML = `
-    <div class="r-icon">${coupon.icon}</div>
-    <p class="r-title">${coupon.title}</p>
-    <p class="r-desc">${coupon.desc}</p>
-    <p class="r-footer">Kupons priekš Agneses</p>
-  `;
-  document.body.appendChild(render);
-
   const originalLabel = btn.textContent;
   btn.textContent = "...";
 
-  html2canvas(render, { backgroundColor: null, scale: 2 })
-    .then((canvasEl) => {
-      const dataUrl = canvasEl.toDataURL("image/png");
-      showCouponPreview(dataUrl);
-    })
-    .catch(() => {
-      alert("Nevarēju sagatavot attēlu — mēģini vēlreiz.");
-    })
-    .finally(() => {
-      render.remove();
-      btn.textContent = originalLabel;
-    });
+  try {
+    const dataUrl = renderCouponImage(coupon);
+    showCouponPreview(dataUrl);
+  } catch (e) {
+    alert("Nevarēju sagatavot attēlu — mēģini vēlreiz.");
+  } finally {
+    btn.textContent = originalLabel;
+  }
+}
+
+// Drawn directly with Canvas 2D (no external library, no network call) so
+// it renders instantly and reliably even inside restrictive in-app
+// browsers (e.g. links opened straight from WhatsApp) where third-party
+// CDN scripts can be slow to load or blocked outright.
+function renderCouponImage(coupon) {
+  const scale = 2;
+  const width = 400 * scale;
+  const height = 240 * scale;
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext("2d");
+
+  const radius = 28 * scale;
+  const strokeWidth = 3 * scale;
+
+  roundRectPath(ctx, 0, 0, width, height, radius);
+  const bgGradient = ctx.createLinearGradient(0, 0, width, height);
+  bgGradient.addColorStop(0, "#f5efe6");
+  bgGradient.addColorStop(1, "#fffaf3");
+  ctx.fillStyle = bgGradient;
+  ctx.fill();
+
+  roundRectPath(ctx, strokeWidth / 2, strokeWidth / 2, width - strokeWidth, height - strokeWidth, radius);
+  ctx.lineWidth = strokeWidth;
+  ctx.strokeStyle = "#d4af7a";
+  ctx.stroke();
+
+  ctx.textAlign = "center";
+  ctx.textBaseline = "alphabetic";
+
+  ctx.font = `${44 * scale}px "Segoe UI Emoji", "Apple Color Emoji", sans-serif`;
+  ctx.fillText(coupon.icon, width / 2, 78 * scale);
+
+  ctx.font = `bold ${22 * scale}px "Segoe UI", sans-serif`;
+  ctx.fillStyle = "#5a4636";
+  const titleLines = wrapText(ctx, coupon.title, width - 60 * scale);
+  let y = 118 * scale;
+  titleLines.forEach((line) => {
+    ctx.fillText(line, width / 2, y);
+    y += 28 * scale;
+  });
+
+  ctx.font = `${14 * scale}px "Segoe UI", sans-serif`;
+  ctx.fillStyle = "#8a7666";
+  const descLines = wrapText(ctx, coupon.desc, width - 80 * scale);
+  y += 4 * scale;
+  descLines.forEach((line) => {
+    ctx.fillText(line, width / 2, y);
+    y += 20 * scale;
+  });
+
+  ctx.font = `bold ${12 * scale}px "Segoe UI", sans-serif`;
+  ctx.fillStyle = "#d4af7a";
+  ctx.fillText("KUPONS PRIEKŠ AGNESES", width / 2, height - 24 * scale);
+
+  return canvas.toDataURL("image/png");
+}
+
+function roundRectPath(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+function wrapText(ctx, text, maxWidth) {
+  const words = text.split(" ");
+  const lines = [];
+  let line = "";
+  words.forEach((word) => {
+    const test = line ? line + " " + word : word;
+    if (ctx.measureText(test).width > maxWidth && line) {
+      lines.push(line);
+      line = word;
+    } else {
+      line = test;
+    }
+  });
+  if (line) lines.push(line);
+  return lines;
 }
 
 // Mobile browsers (especially iOS Safari) silently ignore a synthetic

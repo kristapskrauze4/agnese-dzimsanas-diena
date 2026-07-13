@@ -483,30 +483,6 @@ html {
   color: #fff;
 }
 
-/* hidden template used for image export */
-.coupon-render {
-  position: fixed;
-  top: -9999px;
-  left: -9999px;
-  width: 400px;
-  height: 240px;
-  border-radius: 28px;
-  background: linear-gradient(135deg, var(--bg), var(--card));
-  border: 3px solid var(--gold);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  text-align: center;
-  font-family: "Segoe UI", sans-serif;
-}
-
-.coupon-render .r-icon { font-size: 48px; margin-bottom: 12px; }
-.coupon-render .r-title { font-size: 22px; font-weight: 700; color: var(--text); margin: 0 0 6px; }
-.coupon-render .r-desc { font-size: 14px; color: var(--text-soft); margin: 0 0 10px; }
-.coupon-render .r-footer { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); font-weight: 700; }
-
 /* Cat easter egg */
 .cat-egg {
   border: none;
