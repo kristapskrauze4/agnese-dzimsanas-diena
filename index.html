@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="lv">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Ar dzimšanas dienu, Agnese!</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div id="app">
+
+  <!-- progress dots -->
+  <div class="progress-dots" id="progressDots"></div>
+
+  <!-- STEP 1: Greeting -->
+  <section class="step active" data-step="1">
+    <div class="floaters" aria-hidden="true"></div>
+    <div class="step-content">
+      <p class="eyebrow">Šodien ir īpaša diena</p>
+      <h1 class="title">Tava dzimšanas diena,<br><span class="name">Agnese</span>!</h1>
+      <p class="subtitle">Sagatavoju tev kaut ko mazu un mīļu. Gatava?</p>
+      <button class="btn btn-primary" data-next>Sākt ✨</button>
+    </div>
+  </section>
+
+  <!-- STEP 2: Cake -->
+  <section class="step" data-step="2">
+    <div class="step-content">
+      <p class="eyebrow">1. Pūt svecītes</p>
+      <h2 class="heading">Iedomājies vēlēšanos</h2>
+      <p class="hint" id="cakeHint">Pieskaries katrai svecītei, lai to nodzēstu</p>
+
+      <div class="cake-wrap">
+        <div class="candles" id="candles"></div>
+        <div class="cake">
+          <div class="cake-layer cake-top"></div>
+          <div class="cake-drip"></div>
+          <div class="cake-layer cake-bottom"></div>
+          <div class="cake-plate"></div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-hidden" data-next id="cakeNextBtn">Tālāk 🎂</button>
+    </div>
+  </section>
+
+  <!-- STEP 3: Song -->
+  <section class="step" data-step="3">
+    <div class="step-content">
+      <p class="eyebrow">2. Klausies</p>
+      <h2 class="heading">Uzrakstīju tev dziesmu</h2>
+
+      <div class="player-card">
+        <div class="vinyl" id="vinyl">
+          <div class="vinyl-hole"></div>
+        </div>
+        <button class="play-btn" id="playBtn" aria-label="Atskaņot dziesmu">
+          <svg id="iconPlay" viewBox="0 0 24 24" width="28" height="28"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>
+          <svg id="iconPause" viewBox="0 0 24 24" width="28" height="28" style="display:none"><path fill="currentColor" d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+        </button>
+        <p class="song-fallback" id="songFallback" style="display:none">Dziesma vēl top studijā... drīz būs šeit 🎶</p>
+        <audio id="audio" src="assets/song.mp3" preload="none"></audio>
+      </div>
+
+      <div class="step-nav">
+        <button class="btn btn-secondary" data-back>Atpakaļ</button>
+        <button class="btn btn-primary" data-next>Tālāk 💛</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 4: Photos -->
+  <section class="step" data-step="4">
+    <div class="step-content">
+      <p class="eyebrow">3. Atceries</p>
+      <h2 class="heading">Mūsu mazie mirkļi</h2>
+      <p class="hint">Bildes tiks pievienotas drīz — vieta jau gaida</p>
+
+      <div class="photo-grid" id="photoGrid"></div>
+
+      <div class="step-nav">
+        <button class="btn btn-secondary" data-back>Atpakaļ</button>
+        <button class="btn btn-primary" data-next>Tālāk 📸</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 5: Coupons -->
+  <section class="step" data-step="5">
+    <div class="step-content">
+      <p class="eyebrow">4. Izmanto jebkurā brīdī</p>
+      <h2 class="heading">Kuponi tev</h2>
+      <p class="hint">Lejupielādē un atsūti man, kad vien vēlies. Katrs kupons derīgs 1x, jāizmanto līdz nākamajai dzimšanas dienai</p>
+
+      <div class="coupon-grid" id="couponGrid"></div>
+
+      <div class="step-nav">
+        <button class="btn btn-secondary" data-back>Atpakaļ</button>
+        <button class="btn btn-primary" data-next>Tālāk 🎁</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 6: Closing -->
+  <section class="step" data-step="6">
+    <div class="step-content">
+      <p class="eyebrow">Visbeidzot</p>
+      <h2 class="heading">Tu esi super, Agnese!</h2>
+      <p class="closing-text">
+        Paldies, ka esi tāda, kāda esi. Lai šis gads tev nes tikai smieklus,
+        mīļus mirkļus un laimi. Priecīgu dzimšanas dienu!
+      </p>
+      <button class="cat-egg" id="catEgg" aria-label="Kaķa pārsteigums">🐱</button>
+      <p class="cat-hint">pieskaries man 👆</p>
+
+      <div class="step-nav step-nav-single">
+        <button class="btn btn-secondary" data-back>Atpakaļ</button>
+      </div>
+    </div>
+    <div class="heart-rain" id="heartRain" aria-hidden="true"></div>
+  </section>
+
+</div>
+
+<canvas id="confettiCanvas"></canvas>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
