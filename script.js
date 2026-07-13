@@ -266,12 +266,12 @@ couponGrid.addEventListener("click", (e) => {
   downloadCoupon(coupon, btn);
 });
 
-function downloadCoupon(coupon, btn) {
+async function downloadCoupon(coupon, btn) {
   const originalLabel = btn.textContent;
   btn.textContent = "...";
 
   try {
-    const dataUrl = renderCouponImage(coupon);
+    const dataUrl = await renderCouponImage(coupon);
     if (isIOS()) {
       // iOS Safari (and every browser built on it, including in-app
       // browsers) refuses to auto-download a generated image — this is
@@ -294,7 +294,7 @@ function downloadCoupon(coupon, btn) {
 // it renders instantly and reliably even inside restrictive in-app
 // browsers (e.g. links opened straight from WhatsApp) where third-party
 // CDN scripts can be slow to load or blocked outright.
-function renderCouponImage(coupon) {
+async function renderCouponImage(coupon) {
   const scale = 2;
   const width = 400 * scale;
   const height = 240 * scale;
@@ -321,12 +321,17 @@ function renderCouponImage(coupon) {
   ctx.textAlign = "center";
   ctx.textBaseline = "alphabetic";
 
-  // Naming a font that doesn't exist on the device (e.g. "Segoe UI Emoji"
-  // on iOS) can make Safari's canvas skip emoji fallback entirely and
-  // draw nothing — a plain generic family lets each OS fall back to its
-  // own native emoji font correctly.
-  ctx.font = `${44 * scale}px sans-serif`;
-  ctx.fillText(coupon.icon, width / 2, 78 * scale);
+  // Safari's Canvas 2D fillText silently refuses to paint color emoji no
+  // matter which font is named — a long-standing WebKit bug. Rendering
+  // the emoji as SVG <text> (real text-layout engine, not Canvas 2D) and
+  // drawing that as an image works reliably everywhere instead.
+  const iconSize = 56 * scale;
+  try {
+    const emojiImg = await loadEmojiImage(coupon.icon, iconSize);
+    ctx.drawImage(emojiImg, width / 2 - iconSize / 2, 32 * scale, iconSize, iconSize);
+  } catch (e) {
+    // if it fails to load for some reason, just skip the icon rather than breaking the whole coupon
+  }
 
   ctx.font = `bold ${22 * scale}px "Segoe UI", sans-serif`;
   ctx.fillStyle = "#5a4636";
@@ -351,6 +356,19 @@ function renderCouponImage(coupon) {
   ctx.fillText("KUPONS PRIEKŠ AGNESES", width / 2, height - 24 * scale);
 
   return canvas.toDataURL("image/png");
+}
+
+function loadEmojiImage(emoji, size) {
+  return new Promise((resolve, reject) => {
+    const svg =
+      `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">` +
+      `<text x="50%" y="53%" font-size="${size * 0.82}" text-anchor="middle" dominant-baseline="central">${emoji}</text>` +
+      `</svg>`;
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+  });
 }
 
 function roundRectPath(ctx, x, y, w, h, r) {
