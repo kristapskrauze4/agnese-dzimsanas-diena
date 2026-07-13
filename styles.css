@@ -569,6 +569,44 @@ html {
   z-index: 50;
 }
 
+/* Coupon preview overlay (mobile-safe "download") */
+.coupon-preview-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(58, 47, 38, 0.65);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.coupon-preview-overlay.visible {
+  display: flex;
+}
+
+.coupon-preview-card {
+  background: var(--card);
+  border-radius: 24px;
+  padding: 20px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+
+.coupon-preview-card img {
+  width: 100%;
+  border-radius: 16px;
+  margin-bottom: 14px;
+}
+
+.coupon-preview-hint {
+  font-size: 14px;
+  color: var(--text-soft);
+  margin: 0 0 16px;
+}
+
 @media (min-width: 600px) {
   .photo-grid { grid-template-columns: repeat(3, 1fr); }
 }

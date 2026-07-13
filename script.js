@@ -275,19 +275,38 @@ function downloadCoupon(coupon, btn) {
 
   html2canvas(render, { backgroundColor: null, scale: 2 })
     .then((canvasEl) => {
-      const link = document.createElement("a");
-      link.download = coupon.title.toLowerCase().replace(/[^a-z0-9]+/g, "-") + "-kupons.png";
-      link.href = canvasEl.toDataURL("image/png");
-      link.click();
+      const dataUrl = canvasEl.toDataURL("image/png");
+      showCouponPreview(dataUrl);
     })
     .catch(() => {
-      alert("Nevarēju lejupielādēt attēlu — mēģini vēlreiz.");
+      alert("Nevarēju sagatavot attēlu — mēģini vēlreiz.");
     })
     .finally(() => {
       render.remove();
       btn.textContent = originalLabel;
     });
 }
+
+// Mobile browsers (especially iOS Safari) silently ignore a synthetic
+// click on <a download> with a data: URL, so instead we show the coupon
+// full-screen and let the user long-press it to save to their photos.
+const couponPreviewOverlay = document.getElementById("couponPreviewOverlay");
+const couponPreviewImg = document.getElementById("couponPreviewImg");
+const couponPreviewClose = document.getElementById("couponPreviewClose");
+
+function showCouponPreview(dataUrl) {
+  couponPreviewImg.src = dataUrl;
+  couponPreviewOverlay.classList.add("visible");
+}
+
+function hideCouponPreview() {
+  couponPreviewOverlay.classList.remove("visible");
+}
+
+couponPreviewClose.addEventListener("click", hideCouponPreview);
+couponPreviewOverlay.addEventListener("click", (e) => {
+  if (e.target === couponPreviewOverlay) hideCouponPreview();
+});
 
 // ---------- Cat easter egg on closing step ----------
 const catEgg = document.getElementById("catEgg");
