@@ -252,6 +252,13 @@ coupons.forEach((c, index) => {
   couponGrid.appendChild(card);
 });
 
+function isIOS() {
+  return (
+    /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
+  );
+}
+
 couponGrid.addEventListener("click", (e) => {
   const btn = e.target.closest(".coupon-download");
   if (!btn) return;
@@ -265,7 +272,17 @@ function downloadCoupon(coupon, btn) {
 
   try {
     const dataUrl = renderCouponImage(coupon);
-    showCouponPreview(dataUrl);
+    if (isIOS()) {
+      // iOS Safari (and every browser built on it, including in-app
+      // browsers) refuses to auto-download a generated image — this is
+      // an OS-level restriction, not something a website can work around.
+      showCouponPreview(dataUrl);
+    } else {
+      const link = document.createElement("a");
+      link.href = dataUrl;
+      link.download = coupon.title.toLowerCase().replace(/[^a-z0-9]+/g, "-") + "-kupons.png";
+      link.click();
+    }
   } catch (e) {
     alert("Nevarēju sagatavot attēlu — mēģini vēlreiz.");
   } finally {

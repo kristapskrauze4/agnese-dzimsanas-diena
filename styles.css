@@ -435,28 +435,30 @@ html {
 
 .coupon-card {
   background: var(--card);
+  border: 1.5px solid var(--gold);
   border-radius: 20px;
-  padding: 18px 20px;
+  padding: 22px 20px;
   box-shadow: var(--shadow);
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 14px;
-  text-align: left;
+  gap: 6px;
+  text-align: center;
 }
 
 .coupon-icon {
-  font-size: 30px;
-  flex-shrink: 0;
+  font-size: 38px;
+  margin-bottom: 4px;
 }
 
 .coupon-body {
-  flex: 1;
+  width: 100%;
 }
 
 .coupon-title {
   font-weight: 700;
   margin: 0 0 2px;
-  font-size: 15px;
+  font-size: 16px;
 }
 
 .coupon-desc {
@@ -466,11 +468,12 @@ html {
 }
 
 .coupon-download {
+  margin-top: 10px;
   border: 1px solid var(--gold);
   background: transparent;
   color: var(--gold);
   border-radius: 999px;
-  padding: 8px 14px;
+  padding: 9px 22px;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
