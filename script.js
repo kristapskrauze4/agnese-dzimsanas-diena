@@ -321,7 +321,11 @@ function renderCouponImage(coupon) {
   ctx.textAlign = "center";
   ctx.textBaseline = "alphabetic";
 
-  ctx.font = `${44 * scale}px "Segoe UI Emoji", "Apple Color Emoji", sans-serif`;
+  // Naming a font that doesn't exist on the device (e.g. "Segoe UI Emoji"
+  // on iOS) can make Safari's canvas skip emoji fallback entirely and
+  // draw nothing — a plain generic family lets each OS fall back to its
+  // own native emoji font correctly.
+  ctx.font = `${44 * scale}px sans-serif`;
   ctx.fillText(coupon.icon, width / 2, 78 * scale);
 
   ctx.font = `bold ${22 * scale}px "Segoe UI", sans-serif`;
