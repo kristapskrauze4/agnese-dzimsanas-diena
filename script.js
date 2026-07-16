@@ -200,29 +200,44 @@ audio.addEventListener("ended", () => {
   iconPause.style.display = "none";
 });
 
-// ---------- Photo gallery (placeholders — swap in real photos by editing this list) ----------
-const photos = [
-  { src: "assets/photos/photo1.jpg", alt: "Mēs abi" },
-  { src: "assets/photos/photo2.jpg", alt: "Mēs abi" },
-  { src: "assets/photos/photo3.jpg", alt: "Dēls" },
-  { src: "assets/photos/photo4.jpg", alt: "Kaķis" },
-  { src: "assets/photos/photo5.jpg", alt: "Kaķis" },
-  { src: "assets/photos/photo6.jpg", alt: "Mēs abi" },
+// ---------- Photo gallery (add more by editing this list) ----------
+const media = [
+  { type: "image", src: "assets/photos/photo1.jpg", alt: "Kaķis" },
+  { type: "image", src: "assets/photos/photo2.jpg", alt: "Mēs abi" },
+  { type: "image", src: "assets/photos/photo3.jpg", alt: "Dēls ar kaķi" },
+  { type: "image", src: "assets/photos/photo4.jpg", alt: "Kaķis" },
+  { type: "video", src: "assets/videos/video1.mp4" },
+  { type: "video", src: "assets/videos/video2.mp4" },
 ];
 
 const photoGrid = document.getElementById("photoGrid");
-photos.forEach((p) => {
+media.forEach((m) => {
   const slot = document.createElement("div");
   slot.className = "photo-slot";
-  const img = document.createElement("img");
-  img.alt = p.alt;
-  img.loading = "lazy";
-  img.src = p.src;
-  img.onerror = () => {
-    slot.removeChild(img);
-    slot.textContent = "🐾";
-  };
-  slot.appendChild(img);
+
+  if (m.type === "video") {
+    const video = document.createElement("video");
+    video.src = m.src;
+    video.controls = true;
+    video.playsInline = true;
+    video.preload = "metadata";
+    video.onerror = () => {
+      slot.removeChild(video);
+      slot.textContent = "🐾";
+    };
+    slot.appendChild(video);
+  } else {
+    const img = document.createElement("img");
+    img.alt = m.alt;
+    img.loading = "lazy";
+    img.src = m.src;
+    img.onerror = () => {
+      slot.removeChild(img);
+      slot.textContent = "🐾";
+    };
+    slot.appendChild(img);
+  }
+
   photoGrid.appendChild(slot);
 });
 
